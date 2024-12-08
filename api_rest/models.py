@@ -1,12 +1,25 @@
 from django.db import models
 
-class User(models.Model):
+class Cliente(models.Model):
 
-    user_nickname = models.CharField(primary_key=True, max_length=100, default=" ")
-    user_nome = models.CharField(max_length=180, default=" ")
-    user_email = models.EmailField(default=" ")
-    user_idade = models.IntegerField(default=0)
+    cliente_nickname = models.CharField(primary_key=True, max_length=100, default=" ")
+    cliente_nome = models.CharField(max_length=180, default=" ")
+    cliente_email = models.EmailField(default=" ")
+    cliente_idade = models.IntegerField(default=0)
 
     def __str__(self):
-        return f'Nickname: {self.user_nickname} | Email: {self.user_email}'
+        return f'Nickname: {self.cliente_nickname} | Email: {self.cliente_email}'
+    
+class Pet(models.Model):
+
+    pet_nickname = models.CharField(primary_key=True, max_length=100, default=" ")
+    pet_cliente = models.CharField(max_length=180, default=" ")
+    cliente_idade = models.IntegerField(default=0)
+
+class Funcionario(models.Model):
+
+    funcionario_nickname = models.CharField(primary_key=True, max_length=100, default=" ")
+    funcionario_nome = models.CharField(max_length=180, default=" ")
+    funcionario_email = models.EmailField(default=" ")
+    funcionario_idade = models.IntegerField(default=0)
     
