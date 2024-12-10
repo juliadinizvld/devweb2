@@ -16,6 +16,9 @@ class Pet(models.Model):
     pet_cliente = models.CharField(max_length=180, default=" ")
     cliente_idade = models.IntegerField(default=0)
 
+    def __str__(self):
+        return f'Pet: {self.pet_nickname} | Tutor: {self.pet_cliente}'
+
 class Funcionario(models.Model):
 
     funcionario_nickname = models.CharField(primary_key=True, max_length=100, default=" ")
@@ -23,3 +26,5 @@ class Funcionario(models.Model):
     funcionario_email = models.EmailField(default=" ")
     funcionario_idade = models.IntegerField(default=0)
     
+    def __str__(self):
+        return f'Funcionario: {self.funcionario_nickname} | Email: {self.funcionario_email}'
