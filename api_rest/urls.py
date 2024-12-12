@@ -22,3 +22,6 @@ urlpatterns = [
     # Outras URLs
     path('admin/', admin.site.urls),  # URL padrão para o painel de administração do Django
 ]
+ 
+
+ 

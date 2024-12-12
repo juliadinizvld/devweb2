@@ -13,7 +13,6 @@ from .serializers import ClienteSerializer, PetSerializer, FuncionarioSerializer
 
 import json
 
-from . import funcoes as fn
 
 # View para obter todos os clientes
 @api_view(['GET'])
@@ -223,5 +222,57 @@ def funcionario_manager(request):
             return Response(status=status.HTTP_202_ACCEPTED)
         except Funcionario.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+# Função para obter todos os pets
+@api_view(['GET'])
+def get_pets(request):
+    if request.method == 'GET':
+        pets = Pet.objects.all()  # Pega todos os objetos da tabela Pet
+        serializer = PetSerializer(pets, many=True)  # Serializa a lista de pets
+        return Response(serializer.data)  # Retorna os dados serializados
+
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+# Função para obter um pet específico pelo nickname
+@api_view(['GET'])
+def get_pet_by_nick(request, nick):
+    try:
+        pet = Pet.objects.get(pk=nick)  # Tenta encontrar o pet pelo nickname
+    except Pet.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = PetSerializer(pet)  # Serializa os dados do pet
+        return Response(serializer.data)  # Retorna os dados do pet
+
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+# Função para obter todos os funcionários
+@api_view(['GET'])
+def get_funcionarios(request):
+    if request.method == 'GET':
+        funcionarios = Funcionario.objects.all()  # Pega todos os objetos da tabela Funcionario
+        serializer = FuncionarioSerializer(funcionarios, many=True)  # Serializa a lista de funcionários
+        return Response(serializer.data)  # Retorna os dados serializados
+
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+# Função para obter um funcionário específico pelo nickname
+@api_view(['GET'])
+def get_funcionario_by_nick(request, nick):
+    try:
+        funcionario = Funcionario.objects.get(pk=nick)  # Tenta encontrar o funcionário pelo nickname
+    except Funcionario.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = FuncionarioSerializer(funcionario)  # Serializa os dados do funcionário
+        return Response(serializer.data)  # Retorna os dados do funcionário
+
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
     
     
