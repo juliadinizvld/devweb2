@@ -1,11 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
-
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-
-# Importando os modelos
+from django.contrib import messages
+from .forms import ClienteForm, PetForm, FuncionarioForm
 from .models import Cliente, Pet, Funcionario
 
 # Importando os serializers
@@ -19,19 +18,16 @@ def home(request):
 # View para obter todos os clientes
 @api_view(['GET'])
 def get_clientes(request):
-
     if request.method == 'GET':
         clientes = Cliente.objects.all()  # Pega todos os objetos da tabela Cliente
         serializer = ClienteSerializer(clientes, many=True)  # Serializa a lista de clientes
         return Response(serializer.data)  # Retorna os dados serializados
-
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 # View para obter, editar ou atualizar um cliente por nickname
 @api_view(['GET', 'PUT'])
 def get_cliente_by_nick(request, nick):
-
     try:
         cliente = Cliente.objects.get(pk=nick)  # Tenta encontrar o cliente pelo nickname
     except Cliente.DoesNotExist:
@@ -54,7 +50,6 @@ def get_cliente_by_nick(request, nick):
 # View para gerenciar clientes (CRUD completo)
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def cliente_manager(request):
-
     # GET - Listar ou pegar cliente por nickname
     if request.method == 'GET':
         try:
@@ -112,10 +107,9 @@ def cliente_manager(request):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-# Similar para Pet
+# View para gerenciar Pets (CRUD completo)
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def pet_manager(request):
-
     if request.method == 'GET':
         try:
             if 'pet' in request.GET:
@@ -169,10 +163,9 @@ def pet_manager(request):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-# Similar para Funcionario
+# View para gerenciar Funcionários (CRUD completo)
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def funcionario_manager(request):
-
     if request.method == 'GET':
         try:
             if 'funcionario' in request.GET:
@@ -224,19 +217,28 @@ def funcionario_manager(request):
             return Response(status=status.HTTP_202_ACCEPTED)
         except Funcionario.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        
-# Função para obter todos os pets
+
+
+# Funções auxiliares para obter todos os pets, clientes e funcionários
 @api_view(['GET'])
 def get_pets(request):
     if request.method == 'GET':
         pets = Pet.objects.all()  # Pega todos os objetos da tabela Pet
         serializer = PetSerializer(pets, many=True)  # Serializa a lista de pets
         return Response(serializer.data)  # Retorna os dados serializados
-
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-# Função para obter um pet específico pelo nickname
+@api_view(['GET'])
+def get_funcionarios(request):
+    if request.method == 'GET':
+        funcionarios = Funcionario.objects.all()  # Pega todos os objetos da tabela Funcionario
+        serializer = FuncionarioSerializer(funcionarios, many=True)  # Serializa a lista de funcionários
+        return Response(serializer.data)  # Retorna os dados serializados
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+# Função para obter um pet ou funcionário específico pelo nickname
 @api_view(['GET'])
 def get_pet_by_nick(request, nick):
     try:
@@ -247,22 +249,9 @@ def get_pet_by_nick(request, nick):
     if request.method == 'GET':
         serializer = PetSerializer(pet)  # Serializa os dados do pet
         return Response(serializer.data)  # Retorna os dados do pet
-
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-# Função para obter todos os funcionários
-@api_view(['GET'])
-def get_funcionarios(request):
-    if request.method == 'GET':
-        funcionarios = Funcionario.objects.all()  # Pega todos os objetos da tabela Funcionario
-        serializer = FuncionarioSerializer(funcionarios, many=True)  # Serializa a lista de funcionários
-        return Response(serializer.data)  # Retorna os dados serializados
-
-    return Response(status=status.HTTP_400_BAD_REQUEST)
-
-
-# Função para obter um funcionário específico pelo nickname
 @api_view(['GET'])
 def get_funcionario_by_nick(request, nick):
     try:
@@ -273,8 +262,32 @@ def get_funcionario_by_nick(request, nick):
     if request.method == 'GET':
         serializer = FuncionarioSerializer(funcionario)  # Serializa os dados do funcionário
         return Response(serializer.data)  # Retorna os dados do funcionário
-
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    
-    
+# Funções para cadastro de cliente, pet e funcionario
+@api_view(['POST'])
+def cadastro_cliente(request):
+    if request.method == 'POST':
+        serializer = ClienteSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+@api_view(['POST'])
+def cadastro_pet(request):
+    if request.method == 'POST':
+        serializer = PetSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+@api_view(['POST'])
+def cadastro_funcionario(request):
+    if request.method == 'POST':
+        serializer = FuncionarioSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)

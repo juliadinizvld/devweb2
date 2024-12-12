@@ -24,7 +24,14 @@ urlpatterns = [
 
     # Outras URLs
     path('admin/', admin.site.urls),  # URL padrão para o painel de administração do Django
+
+
+    path('cadastro/cliente/', views.cadastro_cliente, name='cadastro_cliente'),
+    path('cadastro/pet/', views.cadastro_pet, name='cadastro_pet'),
+    path('cadastro/funcionario/', views.cadastro_funcionario, name='cadastro_funcionario'),
+
 ]
+
  
 
  
