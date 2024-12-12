@@ -1,9 +1,12 @@
 from django.contrib import admin
 from django.urls import path, include
 
-from . import views  # Importe as views de onde você definiu suas funções
+from . import views  
 
 urlpatterns = [
+
+    path('', views.home, name='home'),
+    
     # Rotas para Cliente
     path('clientes/', views.get_clientes, name='get_all_clientes'),  # Obter todos os clientes
     path('cliente/<str:nick>/', views.get_cliente_by_nick, name='get_cliente_by_nick'),  # Obter um cliente pelo nickname

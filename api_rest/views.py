@@ -13,6 +13,8 @@ from .serializers import ClienteSerializer, PetSerializer, FuncionarioSerializer
 
 import json
 
+def home(request):
+    return render(request, 'index.html')
 
 # View para obter todos os clientes
 @api_view(['GET'])
