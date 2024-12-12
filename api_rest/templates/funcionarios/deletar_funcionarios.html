@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Excluir funcionario</title>
+</head>
+<body>
+    <h1>Excluir {{funcionario.nome }}</h1>
+    <p>Tem certeza de que deseja excluir este funcionario?</p>
+    <form method="POST" action="{% url funcionario_manager' %}">
+        {% csrf_token %}
+        <input type="hidden" name="cliente_nickname" value="{{funcionario.nickname }}">
+        <button type="submit" name="_method" value="DELETE">Excluir</button>
+    </form>
+    <a href="{% url 'get_all_funcionario' %}">Cancelar</a>
+</body>
+</html>

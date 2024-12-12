@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Excluir Cliente</title>
+</head>
+<body>
+    <h1>Excluir {{ cliente.nome }}</h1>
+    <p>Tem certeza de que deseja excluir este cliente?</p>
+    <form method="POST" action="{% url 'cliente_manager' %}">
+        {% csrf_token %}
+        <input type="hidden" name="cliente_nickname" value="{{ cliente.nickname }}">
+        <button type="submit" name="_method" value="DELETE">Excluir</button>
+    </form>
+    <a href="{% url 'get_all_clientes' %}">Cancelar</a>
+</body>
+</html>

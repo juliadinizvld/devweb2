@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de pets</title>
+</head>
+<body>
+    <h1>Pets</h1>
+    <ul>
+        {% for pets in pets %}
+            <li>
+                <a href="{% url 'get_pets_by_nick' pets.name %}">{{ pets.nome }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'pets_manager' %}">Adicionar Novo pets</a>
+</body>
+</html>

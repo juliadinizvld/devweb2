@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de funcionario</title>
+</head>
+<body>
+    <h1>Clientes</h1>
+    <ul>
+        {% for funcionario in Funcionarios %}
+            <li>
+                <a href="{% url 'get_funcionario_by_nick' funcionario.nickname %}">{{ funcionario.nome }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'funcionario_manager' %}">Adicionar Novo funcionario</a>
+</body>
+</html>
