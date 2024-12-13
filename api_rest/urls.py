@@ -8,9 +8,9 @@ urlpatterns = [
     path('', views.home, name='home'),
     
     # Rotas para Cliente
-    path('clientes/', views.get_clientes, name='get_all_clientes'),  # Obter todos os clientes
-    path('cliente/<str:nick>/', views.get_cliente_by_nick, name='get_cliente_by_nick'),  # Obter um cliente pelo nickname
-    path('cliente/data/', views.cliente_manager, name='cliente_manager'),  # Gerenciar clientes (CRUD completo)
+   # path('clientes/', views.get_clientes, name='get_all_clientes'),  # Obter todos os clientes
+    #path('cliente/<str:nick>/', views.get_cliente_by_nick, name='get_cliente_by_nick'),  # Obter um cliente pelo nickname
+    #path('cliente/data/', views.cliente_manager, name='cliente_manager'),  # Gerenciar clientes (CRUD completo)
 
     # Rotas para Pet
     path('pets/', views.get_pets, name='get_all_pets'),  # Obter todos os pets
@@ -26,12 +26,16 @@ urlpatterns = [
     path('admin/', admin.site.urls),  # URL padrão para o painel de administração do Django
 
 
-    path('cadastro/cliente/', views.cadastro_cliente, name='cadastro_cliente'),
+    #path('cadastro/cliente/', views.cadastro_cliente, name='cadastro_cliente'),
     path('cadastro/pet/', views.cadastro_pet, name='cadastro_pet'),
     path('cadastro/funcionario/', views.cadastro_funcionario, name='cadastro_funcionario'),
 
+
+
+    path('listar_clientes/', views.listar_clientes_page, name='listar_clientes_page'),
+    path('clientes/', views.listar_clientes_api, name='listar_clientes_api'),
+    path('editar_cliente/<str:nick>/', views.editar_cliente, name='editar_cliente'),
+    path('deletar_cliente/<str:cliente_id>/', views.deletar_cliente, name='deletar_cliente'),
+    path('cadastrar_cliente/', views.cadastrar_cliente, name='cadastrar_cliente'),  # Implementar a view para cadastrar
+
 ]
-
- 
-
- 

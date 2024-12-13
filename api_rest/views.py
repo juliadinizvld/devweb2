@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -14,6 +14,10 @@ import json
 
 def home(request):
     return render(request, 'index.html')
+
+def listar_clientes_page(request):
+    clientes = Cliente.objects.all()
+    return render(request, 'index.html', {'clientes': clientes})
 
 # View para obter todos os clientes
 @api_view(['GET'])
@@ -265,14 +269,57 @@ def get_funcionario_by_nick(request, nick):
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 # Funções para cadastro de cliente, pet e funcionario
-@api_view(['POST'])
-def cadastro_cliente(request):
+def cadastrar_cliente(request):
     if request.method == 'POST':
-        serializer = ClienteSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
+        # Obtendo os dados do cliente do formulário
+        cliente_nome = request.POST.get('cliente_nome')
+        cliente_email = request.POST.get('cliente_email')
+        cliente_idade = request.POST.get('cliente_idade')
+        cliente_nickname = request.POST.get('cliente_nickname')
+
+        # Criando o novo cliente
+        novo_cliente = Cliente(
+            cliente_nome=cliente_nome,
+            cliente_email=cliente_email,
+            cliente_idade=cliente_idade,
+            cliente_nickname=cliente_nickname
+        )
+        
+        # Salvando no banco de dados
+        novo_cliente.save()
+
+        # Redirecionando para a lista de clientes após o cadastro
+        return redirect('listar_clientes_page')
+
+    return render(request, 'clientes/cadastrar_cliente.html')
+
+def listar_clientes_api(request):
+    clientes = Cliente.objects.values('cliente_nickname', 'cliente_nome', 'cliente_email', 'cliente_idade')  
+    return JsonResponse(list(clientes), safe=False)
+
+# View para editar cliente
+def editar_cliente(request, nick):
+    cliente = get_object_or_404(Cliente, cliente_nickname=nick)  # Alterado para buscar pelo nickname
+    if request.method == 'POST':
+        cliente.cliente_nome = request.POST.get('cliente_nome')
+        cliente.cliente_email = request.POST.get('cliente_email')
+        cliente.cliente_idade = request.POST.get('cliente_idade')
+        # Salva o objeto no banco de dados
+        cliente.save()
+        return redirect('listar_clientes_page')
+
+    return render(request, 'clientes/editar_clientes.html', {'cliente': cliente})
+
+# View para excluir cliente
+def deletar_cliente(request, cliente_id):
+    cliente = get_object_or_404(Cliente, cliente_nickname=cliente_id)
+    cliente.delete()
+    return redirect('listar_clientes_page')
+
+
+
+
+
 
 @api_view(['POST'])
 def cadastro_pet(request):

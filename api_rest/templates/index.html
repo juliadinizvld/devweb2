@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Creche de Pets{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    
+
     <!-- CSS do Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- JavaScript do Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
+
 <body>
     <header>
         <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
@@ -24,39 +26,46 @@
                     <img src="{% static 'imagens/2.png' %}" class="d-block w-100" alt="...">
                 </div>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+                data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+                data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>
         </div>
-        
+
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <a class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Pets</a>
-                <a class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Clientes</a>
-                <a class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Funcionários</a>
+                <a class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" href="#nav-home" role="tab"
+                    aria-controls="nav-home" aria-selected="true">Pets</a>
+                <a class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" href="#nav-profile" role="tab"
+                    aria-controls="nav-profile" aria-selected="false">Clientes</a>
+                <a class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" href="#nav-contact" role="tab"
+                    aria-controls="nav-contact" aria-selected="false">Funcionários</a>
             </div>
             <div class="tab-content" id="nav-tabContent">
-                <!-- Pet Form Tab -->
+                <!-- Pets Tab -->
                 <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                    <h2>Cadastro de Pet</h2>
-                    <form method="post">
-                        {% csrf_token %}
-                        {{ form.as_p }}  <!-- Exibe o formulário como parágrafos -->
-                        <button type="submit" class="btn btn-primary">Cadastrar</button>
-                    </form>
+                    <h2>Cadastro de Pets</h2>
+                    <!-- Conteúdo de Pets -->
                 </div>
+
                 <!-- Clientes Tab -->
                 <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                    <iframe src="/clientes.html" style="width: 100%; height: 500px; border: none;"></iframe>
+                    <h2>Lista de Clientes</h2>
+                    <div id="clientes-lista">
+                        <p>Carregando...</p>
+                    </div>
                 </div>
+
                 <!-- Funcionários Tab -->
                 <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
-                    <iframe src="/funcionarios.html" style="width: 100%; height: 500px; border: none;"></iframe>
+                    <h2>Funcionários</h2>
+                    <p>Conteúdo dos funcionários aqui.</p>
                 </div>
             </div>
         </nav>
@@ -71,5 +80,57 @@
     <footer>
         <p>&copy; 2024 Creche de Pets. Todos os direitos reservados.</p>
     </footer>
+
+    <!-- Script para carregar clientes via API -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const clientesLista = document.getElementById("clientes-lista");
+
+            fetch("{% url 'listar_clientes_api' %}") // Certifique-se de que esta URL está correta
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Erro ao carregar os clientes.");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    let html = `
+                    <div><a href="/cadastrar_cliente/" class="btn btn-success">Cadastrar Cliente</a></div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nickname</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Idade</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+                    data.forEach(cliente => {
+                        html += `
+                    <tr>
+                        <td>${cliente.cliente_nickname || ''}</td>
+                        <td>${cliente.cliente_nome || ''}</td>
+                        <td>${cliente.cliente_email || ''}</td>
+                        <td>${cliente.cliente_idade || ''}</td>
+                        <td>
+                            <a href="/editar_cliente/${cliente.cliente_nickname}" class="btn btn-warning">Editar</a>
+                            <a href="/deletar_cliente/${cliente.cliente_nickname}" class="btn btn-danger">Excluir</a>
+                            
+                        </td>
+                    </tr>`;
+                    });
+                    html += </tbody></table>;
+                    clientesLista.innerHTML = html;
+                })
+                .catch(error => {
+                    console.error("Erro:", error);
+                    clientesLista.innerHTML = "<p>Erro ao carregar os clientes.</p>";
+                });
+        });
+
+    </script>
 </body>
+
 </html>
