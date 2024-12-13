@@ -7,7 +7,7 @@ from django.contrib import messages
 from .forms import ClienteForm, PetForm, FuncionarioForm
 from .models import Cliente, Pet, Funcionario
 
-# Importando os serializers
+
 from .serializers import ClienteSerializer, PetSerializer, FuncionarioSerializer
 
 import json
@@ -23,9 +23,9 @@ def listar_clientes_page(request):
 @api_view(['GET'])
 def get_clientes(request):
     if request.method == 'GET':
-        clientes = Cliente.objects.all()  # Pega todos os objetos da tabela Cliente
-        serializer = ClienteSerializer(clientes, many=True)  # Serializa a lista de clientes
-        return Response(serializer.data)  # Retorna os dados serializados
+        clientes = Cliente.objects.all()  
+        serializer = ClienteSerializer(clientes, many=True)  
+        return Response(serializer.data)  
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -45,7 +45,7 @@ def get_cliente_by_nick(request, nick):
         serializer = ClienteSerializer(cliente, data=request.data)
 
         if serializer.is_valid():
-            serializer.save()  # Atualiza o cliente com os dados fornecidos
+            serializer.save() 
             return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -168,18 +168,18 @@ def funcionario_manager(request):
 @api_view(['GET'])
 def get_pets(request):
     if request.method == 'GET':
-        pets = Pet.objects.all()  # Pega todos os objetos da tabela Pet
-        serializer = PetSerializer(pets, many=True)  # Serializa a lista de pets
-        return Response(serializer.data)  # Retorna os dados serializados
+        pets = Pet.objects.all() 
+        serializer = PetSerializer(pets, many=True) 
+        return Response(serializer.data) 
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
 def get_funcionarios(request):
     if request.method == 'GET':
-        funcionarios = Funcionario.objects.all()  # Pega todos os objetos da tabela Funcionario
-        serializer = FuncionarioSerializer(funcionarios, many=True)  # Serializa a lista de funcionários
-        return Response(serializer.data)  # Retorna os dados serializados
+        funcionarios = Funcionario.objects.all()  
+        serializer = FuncionarioSerializer(funcionarios, many=True) 
+        return Response(serializer.data) 
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -229,7 +229,6 @@ def cadastrar_cliente(request):
         # Salvando no banco de dados
         novo_cliente.save()
 
-        # Redirecionando para a lista de clientes após o cadastro
         return redirect('listar_clientes_page')
 
     return render(request, 'clientes/cadastrar_cliente.html')
@@ -238,7 +237,7 @@ def listar_clientes_api(request):
     clientes = Cliente.objects.values('cliente_nickname', 'cliente_nome', 'cliente_email', 'cliente_idade')  
     return JsonResponse(list(clientes), safe=False)
 
-# View para editar cliente
+#  editar cliente
 def editar_cliente(request, nick):
     cliente = get_object_or_404(Cliente, cliente_nickname=nick)  # Alterado para buscar pelo nickname
     if request.method == 'POST':
@@ -251,7 +250,7 @@ def editar_cliente(request, nick):
 
     return render(request, 'clientes/editar_clientes.html', {'cliente': cliente})
 
-# View para excluir cliente
+# excluir cliente
 def deletar_cliente(request, cliente_id):
     cliente = get_object_or_404(Cliente, cliente_nickname=cliente_id)
     cliente.delete()
@@ -277,7 +276,6 @@ def cadastrar_funcionario(request):
         # Salvando no banco de dados
         novo_funcionario.save()
 
-        # Redirecionando para a lista de clientes após o cadastro
         return redirect('listar_clientes_page')
 
     return render(request, 'funcionarios/cadastrar_funcionario.html')
@@ -286,7 +284,7 @@ def listar_funcionarios_api(request):
     funcionarios = Funcionario.objects.values('funcionario_nickname', 'funcionario_nome', 'funcionario_email', 'funcionario_idade')  
     return JsonResponse(list(funcionarios), safe=False)
 
-# View para editar funcionario
+#  editar funcionario
 def editar_funcionario(request, nick):
     funcionario = get_object_or_404(Funcionario, funcionario_nickname=nick)  # Alterado para buscar pelo nickname
     if request.method == 'POST':
@@ -299,7 +297,7 @@ def editar_funcionario(request, nick):
 
     return render(request, 'funcionarios/editar_funcionario.html', {'funcionario': funcionario})
 
-# View para excluir cliente
+#  excluir cliente
 def deletar_funcionario(request, funcionario_id):
     funcionario = get_object_or_404(Funcionario, funcionario_nickname=funcionario_id)
     funcionario.delete()
@@ -325,7 +323,7 @@ def cadastrar_pet(request):
         )
         novo_pet.save()
 
-        # Redireciona ou retorna uma mensagem de sucesso
+       
         return redirect('listar_clientes_page')
 
     # Passa a lista de clientes para o template
@@ -333,30 +331,30 @@ def cadastrar_pet(request):
     return render(request, 'pets/cadastrar_pet.html', {'clientes': clientes})
 
 
-# View para listar pets (retorna JSON)
 def listar_pets_api(request):
     pets = Pet.objects.values('pet_nickname', 'pet_nome', 'pet_idade', 'pet_cliente__cliente_nome')  # Inclui o nome do cliente relacionado
     return JsonResponse(list(pets), safe=False)
 
 
-# View para editar um pet
+#  editar  pet
 def editar_pet(request, nick):
     pet = get_object_or_404(Pet, pet_nickname=nick)
+
       # Obtém todos os clientes
     clientes = Cliente.objects.all()  
     if request.method == 'POST':
         pet.pet_nome = request.POST.get('pet_nome')
         pet.pet_idade = request.POST.get('pet_idade')
-        pet.pet_cliente_id = request.POST.get('pet_cliente')  # Atualiza a relação com o cliente
+        pet.pet_cliente_id = request.POST.get('pet_cliente') 
         pet.save()
         return redirect('listar_clientes_page')
 
     return render(request, 'pets/editar_pet.html', {'pet': pet, 'clientes': clientes})
 
 
-# View para excluir um pet
+
 def deletar_pet(request, pet_id):
-    pet = get_object_or_404(Pet, pet_nickname=pet_id)  # Busca pelo nickname
+    pet = get_object_or_404(Pet, pet_nickname=pet_id)  
     pet.delete()
     return redirect('listar_clientes_page')
 

@@ -77,7 +77,7 @@
 
     <main>
         {% block content %}
-        <!-- O conteúdo específico de cada página vai aqui -->
+        
         {% endblock %}
     </main>
 
@@ -90,7 +90,7 @@
         document.addEventListener("DOMContentLoaded", function () {
             const clientesLista = document.getElementById("clientes-lista");
 
-            fetch("{% url 'listar_clientes_api' %}") // Certifique-se de que esta URL está correta
+            fetch("{% url 'listar_clientes_api' %}") 
                 .then(response => {
                     if (!response.ok) {
                         throw new Error("Erro ao carregar os clientes.");
@@ -137,7 +137,7 @@
         document.addEventListener("DOMContentLoaded", function () {
             const funcionariosLista = document.getElementById("funcionarios-lista");
 
-            fetch("{% url 'listar_funcionarios_api' %}") // Certifique-se de que esta URL está correta
+            fetch("{% url 'listar_funcionarios_api' %}") 
                 .then(response => {
                     if (!response.ok) {
                         throw new Error("Erro ao carregar os funcionários.");
@@ -184,7 +184,7 @@
         document.addEventListener("DOMContentLoaded", function () {
             const petsLista = document.getElementById("pets-lista");
 
-            fetch("{% url 'listar_pets_api' %}") // Certifique-se de que esta URL está correta
+            fetch("{% url 'listar_pets_api' %}") 
                 .then(response => {
                     if (!response.ok) {
                         throw new Error("Erro ao carregar os pets.");
