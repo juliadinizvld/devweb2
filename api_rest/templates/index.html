@@ -50,8 +50,10 @@
             <div class="tab-content" id="nav-tabContent">
                 <!-- Pets Tab -->
                 <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                    <h2>Cadastro de Pets</h2>
-                    <!-- Conteúdo de Pets -->
+                    <h2>Lista de Pets</h2>
+                    <div id="pets-lista">
+                        <p>Carregando...</p>
+                    </div>
                 </div>
 
                 <!-- Clientes Tab -->
@@ -64,8 +66,10 @@
 
                 <!-- Funcionários Tab -->
                 <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
-                    <h2>Funcionários</h2>
-                    <p>Conteúdo dos funcionários aqui.</p>
+                    <h2>Lista de Funcionarios</h2>
+                    <div id="funcionarios-lista">
+                        <p>Carregando...</p>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -121,7 +125,7 @@
                         </td>
                     </tr>`;
                     });
-                    html += </tbody></table>;
+                    html += `</tbody></table>`;
                     clientesLista.innerHTML = html;
                 })
                 .catch(error => {
@@ -129,6 +133,100 @@
                     clientesLista.innerHTML = "<p>Erro ao carregar os clientes.</p>";
                 });
         });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const funcionariosLista = document.getElementById("funcionarios-lista");
+
+            fetch("{% url 'listar_funcionarios_api' %}") // Certifique-se de que esta URL está correta
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Erro ao carregar os funcionários.");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    let html = `
+            <div><a href="/cadastrar_funcionario/" class="btn btn-success">Cadastrar Funcionário</a></div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nickname</th>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Idade</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+                    data.forEach(funcionario => {
+                        html += `
+                <tr>
+                    <td>${funcionario.funcionario_nickname || ''}</td>
+                    <td>${funcionario.funcionario_nome || ''}</td>
+                    <td>${funcionario.funcionario_email || ''}</td>
+                    <td>${funcionario.funcionario_idade || ''}</td>
+                    <td>
+                        <a href="/editar_funcionario/${funcionario.funcionario_nickname}" class="btn btn-warning">Editar</a>
+                        <a href="/deletar_funcionario/${funcionario.funcionario_nickname}" class="btn btn-danger">Excluir</a>
+                    </td>
+                </tr>`;
+                    });
+                    html += `</tbody></table>`;
+                    funcionariosLista.innerHTML = html;
+                })
+                .catch(error => {
+                    console.error("Erro:", error);
+                    funcionariosLista.innerHTML = "<p>Erro ao carregar os funcionários.</p>";
+                });
+        });
+
+        
+        document.addEventListener("DOMContentLoaded", function () {
+            const petsLista = document.getElementById("pets-lista");
+
+            fetch("{% url 'listar_pets_api' %}") // Certifique-se de que esta URL está correta
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Erro ao carregar os pets.");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    let html = `
+        <div><a href="/cadastrar_pet/" class="btn btn-success">Cadastrar Pet</a></div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nickname</th>
+                    <th>Nome</th>
+                    <th>Idade</th>
+                    <th>Cliente</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>`;
+                    data.forEach(pet => {
+                        html += `
+            <tr>
+                <td>${pet.pet_nickname || ''}</td>
+                <td>${pet.pet_nome || ''}</td>
+                <td>${pet.pet_idade || ''}</td>
+                <td>${pet.pet_cliente || ''}</td>
+                <td>
+                    <a href="/editar_pet/${pet.pet_nickname}" class="btn btn-warning">Editar</a>
+                    <a href="/deletar_pet/${pet.pet_nickname}" class="btn btn-danger">Excluir</a>
+                </td>
+            </tr>`;
+                    });
+                    html += `</tbody></table>`;
+                    petsLista.innerHTML = html;
+                })
+                .catch(error => {
+                    console.error("Erro:", error);
+                    petsLista.innerHTML = "<p>Erro ao carregar os pets.</p>";
+                });
+        });
+
 
     </script>
 </body>

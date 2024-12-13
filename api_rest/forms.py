@@ -14,7 +14,7 @@ class ClienteForm(forms.ModelForm):
 class PetForm(forms.ModelForm):
     class Meta:
         model = Pet
-        fields = ['pet_nickname', 'pet_cliente', 'cliente_idade']
+        fields = ['pet_nickname', 'pet_nome', 'pet_cliente', 'pet_idade']
         widgets = {
             'pet_cliente': forms.TextInput(attrs={'placeholder': 'Nome do Tutor'}),
         }

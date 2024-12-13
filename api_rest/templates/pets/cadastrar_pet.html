@@ -1,0 +1,20 @@
+<form method="POST">
+    {% csrf_token %}
+    <label for="pet_nickname">Nickname:</label>
+    <input type="text" id="pet_nickname" name="pet_nickname" required><br><br>
+    
+    <label for="pet_nome">Nome:</label>
+    <input type="text" id="pet_nome" name="pet_nome" required><br><br>
+    
+    <label for="pet_idade">Idade:</label>
+    <input type="number" id="pet_idade" name="pet_idade" required><br><br>
+    
+    <label for="pet_cliente">Cliente:</label>
+    <select id="pet_cliente" name="pet_cliente" required>
+        {% for cliente in clientes %}
+            <option value="{{ cliente.cliente_nickname }}">{{ cliente.cliente_nome }}</option>
+        {% endfor %}
+    </select><br><br>
+    
+    <button type="submit">Cadastrar</button>
+</form>

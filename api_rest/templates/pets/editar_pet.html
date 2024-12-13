@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Pet</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h2>Editar Pet</h2>
+        <form method="post" action="{% url 'editar_pet' pet.pet_nickname %}">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="petNome" class="form-label">Nome</label>
+                <input type="text" class="form-control" id="petNome" name="pet_nome" value="{{ pet.pet_nome }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="petIdade" class="form-label">Idade</label>
+                <input type="number" class="form-control" id="petIdade" name="pet_idade" value="{{ pet.pet_idade }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="petCliente" class="form-label">Cliente</label>
+                <select class="form-select" id="petCliente" name="pet_cliente" required>
+                    {% for cliente in clientes %}
+                        <option value="{{ cliente.cliente_nickname }}" 
+                            {% if cliente.cliente_nickname == pet.pet_cliente.cliente_nickname %}selected{% endif %}>
+                            {{ cliente.cliente_nome }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <a href="{% url 'listar_clientes_page' %}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</body>
+
+</html>
