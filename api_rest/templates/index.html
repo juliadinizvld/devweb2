@@ -128,7 +128,7 @@
         }
 
         .btn-danger {
-            background-color: #dc3545;
+            background-color: #ff0019;
             border: none;
         }
 
@@ -164,21 +164,14 @@
         <!-- Seção do cachorro chegando com link -->
         <div class="container">
             <section class="dog-arrival-section">
-                <!-- Imagem como link -->
-                <a href="https://www.topensandoemviajar.com/wp-content/uploads/2021/01/pousadas-pet-friendly-sp-1.jpg" target="_blank">
-                    <img src="{% static 'imagens/cachorro-chegando.jpg' %}" alt="Cachorro chegando no hotelzinho">
                 </a>
-                <h3>Nosso hóspede está chegando!</h3>
-                <p>Seu pet será muito bem cuidado aqui na nossa creche. Estamos prontos para proporcionar a melhor experiência para seu animalzinho!</p>
+                <h3>Por favor, clique em 'Logout' para sair e realizar o login novamente.</h3>
             </section>
         </div>
 
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <a class="nav-link active" data-bs-toggle="tab" href="#nav-home">Pets</a>
-                <a class="nav-link" data-bs-toggle="tab" href="#nav-profile">Clientes</a>
-                <a class="nav-link" data-bs-toggle="tab" href="#nav-contact">Funcionários</a>
-                <a class="nav-link btn btn-danger" href="{% url 'logout' %}">Logout</a>
+                <a class="nav-link btn btn-danger" href="{% url 'logout' %}" style="color: white;">Logout</a>
             </div>
         </nav>
 

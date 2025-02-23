@@ -145,3 +145,4 @@ AUTH_USER_MODEL = 'api_rest.CustomUser'
 # settings.py
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
