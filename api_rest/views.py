@@ -1,23 +1,32 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, JsonResponse
+from django.contrib.auth.forms import UserCreationForm
+from django.http import JsonResponse, HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 from .forms import ClienteForm, PetForm, FuncionarioForm
 from .models import Cliente, Pet, Funcionario
+from .serializers import ClienteSerializer, PetSerializer, FuncionarioSerializer
+from .forms import CustomUserCreationForm 
+from django.contrib import messages
 
+def index(request):
+    return render(request, 'index.html')  # Página inicial com opções de Login/Cadastro
+
+def index2(request):
+    return render(request, 'index2.html') # Pagina depois de logar
 
 from .serializers import ClienteSerializer, PetSerializer, FuncionarioSerializer
 
 import json
 
 def home(request):
-    return render(request, 'index.html')
+    return render(request, 'index2.html')
 
 def listar_clientes_page(request):
     clientes = Cliente.objects.all()
-    return render(request, 'index.html', {'clientes': clientes})
+    return render(request, 'index2.html', {'clientes': clientes})
 
 # View para obter todos os clientes
 @api_view(['GET'])
@@ -358,3 +367,33 @@ def deletar_pet(request, pet_id):
     pet.delete()
     return redirect('listar_clientes_page')
 
+# Autenticação - Login
+def user_login(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect("home")  # Substitua por uma URL válida
+        else:
+            return HttpResponse("Credenciais inválidas")
+    return render(request, "login.html")  # Certifique-se de que existe um template de login
+
+def cadastro(request):
+    if request.method == "POST":
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Usuário cadastrado com sucesso!')  # Mensagem de sucesso
+            return redirect('login')  # Redirecionar para a página de login após o cadastro bem-sucedido
+            
+    else:
+        form = CustomUserCreationForm()
+
+    return render(request, 'cadastro.html', {'form': form})
+
+# Função para logout
+def user_logout(request):
+    logout(request)
+    return redirect('index')  # Substitua com a URL para a qual você deseja redirecionar o usuário após o logout

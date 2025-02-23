@@ -1,5 +1,7 @@
 from django import forms
 from .models import Cliente, Pet, Funcionario
+from .models import CustomUser
+from django.contrib.auth.forms import UserCreationForm
 
 # Formulário de Cadastro de Cliente
 class ClienteForm(forms.ModelForm):
@@ -27,3 +29,10 @@ class FuncionarioForm(forms.ModelForm):
         widgets = {
             'funcionario_email': forms.EmailInput(attrs={'placeholder': 'Digite seu email'}),
         }
+
+class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'email', 'password1', 'password2']      

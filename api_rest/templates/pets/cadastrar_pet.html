@@ -1,20 +1,102 @@
-<form method="POST">
-    {% csrf_token %}
-    <label for="pet_nickname">Nickname:</label>
-    <input type="text" id="pet_nickname" name="pet_nickname" required><br><br>
-    
-    <label for="pet_nome">Nome:</label>
-    <input type="text" id="pet_nome" name="pet_nome" required><br><br>
-    
-    <label for="pet_idade">Idade:</label>
-    <input type="number" id="pet_idade" name="pet_idade" required><br><br>
-    
-    <label for="pet_cliente">Cliente:</label>
-    <select id="pet_cliente" name="pet_cliente" required>
-        {% for cliente in clientes %}
-            <option value="{{ cliente.cliente_nickname }}">{{ cliente.cliente_nome }}</option>
-        {% endfor %}
-    </select><br><br>
-    
-    <button type="submit">Cadastrar</button>
-</form>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Pet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+        }
+        .container img {
+            width: 100%;
+            max-width: 200px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+        }
+        h2 {
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://ipatas.com.br/wp-content/uploads/2022/02/hotel-para-caes.jpg" alt="Cachorro no hotel de pets">
+        <h2>Cadastro de Pet</h2>
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="pet_nickname">Nickname:</label>
+                <input type="text" id="pet_nickname" name="pet_nickname" required>
+            </div>
+
+            <div class="form-group">
+                <label for="pet_nome">Nome:</label>
+                <input type="text" id="pet_nome" name="pet_nome" required>
+            </div>
+
+            <div class="form-group">
+                <label for="pet_idade">Idade:</label>
+                <input type="number" id="pet_idade" name="pet_idade" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="pet_cliente">Cliente:</label>
+                <select id="pet_cliente" name="pet_cliente" required>
+                    <option value="" disabled selected>Selecione um cliente</option>
+                    {% for cliente in clientes %}
+                        <option value="{{ cliente.cliente_nickname }}">{{ cliente.cliente_nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit">Cadastrar</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -124,7 +124,9 @@ STATIC_URL = 'static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
-STATICFILES_DIRS = [BASE_DIR / "static"]  
+STATICFILES_DIRS = [
+    BASE_DIR / "static" ,
+                    ]  
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -133,3 +135,13 @@ CORS_ALOW_ORIGINS = [
 
     
 ]
+
+LOGIN_REDIRECT_URL = '/cadastro/'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = '/login/'
+
+AUTH_USER_MODEL = 'api_rest.CustomUser'
+
+# settings.py
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
